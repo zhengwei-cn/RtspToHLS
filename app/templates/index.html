@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RTSP to HLS</title>
+    <link href="https://vjs.zencdn.net/8.4.0/video-js.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .stream {
+            margin-bottom: 20px;
+        }
+
+        video {
+            width: 640px;
+            height: 360px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>RTSP Streams</h1>
+    <div id="streams"></div>
+    <script src="/static/video.js"></script>
+    <script>
+        async function fetchStreams() {
+            const response = await fetch('/status');
+            const data = await response.json();
+            const streamsDiv = document.getElementById('streams');
+            streamsDiv.innerHTML = '';
+            for (const [streamId, hlsUrl] of Object.entries(data.active_streams)) {
+                const streamDiv = document.createElement('div');
+                streamDiv.className = 'stream';
+                streamDiv.innerHTML = `
+                    <h3>Stream: ${streamId}</h3>
+                    <video id="video-${streamId}" class="video-js vjs-default-skin" controls autoplay>
+                        <source src="${hlsUrl}" type="application/vnd.apple.mpegurl">
+                    </video>
+                `;
+                streamsDiv.appendChild(streamDiv);
+                videojs(`#video-${streamId}`);
+            }
+        }
+        fetchStreams();
+        // setInterval(fetchStreams, 2000); // 每5秒更新流状态
+    </script>
+</body>
+
+</html>

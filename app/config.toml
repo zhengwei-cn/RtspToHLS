@@ -1,0 +1,19 @@
+[app]
+
+[app.video]
+hikvision = "rtsp://{account}:{password}@{ip}:554/Streaming/Channels/{ch}0{subtype}"
+hikvision2 = "rtsp://{account}:{password}@{ip}:554/h264/ch{ch}/{subtype}/av_stream"
+dh = "rtsp://{account}:{password}@{ip}:554/cam/realmonitor?channel={ch}&subtype={subtype}"
+dh2 = "rtsp://{account}:{password}@{ip}:554/Streaming/Channels/{subtype}"
+onvif = ""
+rtsp = "rtsp://{account}:{password}@{url}"
+uniview = "rtsp://{account}:{password}@{ip}:554/unicast/ch{ch}/{subtype}/media/live"
+uniview2 = "rtsp://{account}:{password}@{ip}:554/{subtype}"
+
+[app.hikvision]
+main = "1"
+sub = "2"
+
+[app.dh]
+main = "0"
+sub = "1"

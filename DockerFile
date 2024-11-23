@@ -1,0 +1,27 @@
+# 使用官方 Python 3.9 slim 版作为基础镜像
+FROM python:3.9-slim-buster
+
+# 设置环境变量，减少 Python 编译文件生成，提高运行效率
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+# 设置工作目录
+WORKDIR /app
+
+# 预安装系统依赖（合并成一层减少镜像层数）
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends ffmpeg && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# 安装 Python 包（分离 COPY 和 pip install，提高 Docker 缓存利用率）
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# 复制项目代码
+COPY . .
+
+# 暴露端口
+EXPOSE 5000
+
+# 启动应用程序
+CMD ["python", "app/main.py"]
